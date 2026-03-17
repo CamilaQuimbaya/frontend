@@ -1,0 +1,80 @@
+<div class="notes-page">
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Mis notas 📝</h1>
+            <p>Escribe y guarda tus ideas </p>
+        </div>
+    </section>
+
+    <section class="note-form-card">
+        <header class="card-header">
+            <div>{{isEditing ? 'Editar nota' : 'Nueva nota'}}</div>
+            <p class="subtitle">
+                {{ isEditing ? 'Estas editando una nota existente' : 'Crea un nota rapido para no olvidar nada' }}
+            </p>
+        </header>
+
+        <form #noteForm="ngForm" class="form-grid" (ngSubmit)="submitForm()">
+            <div class="field">
+                <label for="titulo">Titulo</label>
+                <input type="text" id="titulo" [(ngModel)]="form.titulo" name="titulo" placeholder="Compras del mes...etc" required>
+            </div>
+
+            <div class="field">
+                <label for="descripcion">Descripcion</label>
+                <textarea name="descripcion"  id="descripcion" [(ngModel)]="form.descripcion" required placeholder="Escribe tus ideas..."></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" [disabled]="noteForm.invalid">
+                    {{isEditing ? 'Guardar cambios' : 'Agregar nota'}}
+                </button>
+            </div>
+
+            <button type="button" class="btn-secondary" *ngIf="isEditing">Cancelar edicion</button>
+        </form>
+    </section>
+
+
+    <section class="notes-list">
+        <header class="notes-header">
+            <h2>Todas mis notas</h2>
+            <p *ngIf="!loading" class="subtitle">
+                {{ notas.length === 0 ? 'No tienes notas aun' : 'Tienes ' + notas.length + ' notas guardadas' }}
+            </p>
+        </header>
+
+        <div *ngIf="loading" class="loader">
+            <div class="spinner"></div>
+            <span>Cargando notas...</span>
+        </div>
+
+        <div *ngIf="!loading && notas.length === 0" class="empty-state">
+            <h3>Sin notas todavia</h3>
+            <p>Empieza a escribir tus notas nuevas arriba</p>
+        </div>
+
+        <div class="notes-grid" *ngIf="!loading && notas.length > 0">
+            <article *ngFor="let n of notas" class="note-card">
+                <header>
+                    <h3>{{n.titulo}}</h3>
+                    <p class="date">{{n.fecha | date: 'short'}}</p>
+                </header>
+                <p class="content">
+                    {{n.descripcion}}
+                </p>
+
+                <footer>
+                    <button type="button" class="btn-ghost" (click)="editNote(n)">✏️ editar</button>
+                    <button type="button" class="btn-danger" (click)="deleteNote(n._id)">🗑️ eliminar</button>
+                </footer>
+            </article>
+        </div>
+        
+    </section>
+
+    
+
+    
+</div>
